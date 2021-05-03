@@ -1,0 +1,32 @@
+﻿<Window x:Class="Clickoman.windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Clickoman - Игра" Height="487.5" Width="515" ResizeMode="CanMinimize">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120*"/>
+            <ColumnDefinition Width="180*"/>
+        </Grid.ColumnDefinitions>
+        <Canvas Grid.Column="1" x:Name="GameField" Background="Gray" Grid.ColumnSpan="2"/>
+        <Image ></Image>
+
+        <StackPanel Orientation="Vertical">
+            <Label x:Name="PlayerNameOut" FontSize="16" Content="Игрок" HorizontalAlignment="Center"/>
+            <Button x:Name="StartButton" Margin="10" Content="Начать" Click="StartButton_Click"/>
+            <Button x:Name="RewardButton" Margin="10" Content="Достижения" Click="RewardButton_Click"/>
+            <Label x:Name="ScopeOut" FontSize="14" Content="Счёт: "/>
+            <Label FontSize="14" Content="Рейтинг игроков:"/>
+            <DataGrid x:Name="RatingTable" IsReadOnly="True" AutoGenerateColumns="False" Height="300">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Name}" Header="Имя" Width="100"/>
+                    <DataGridTextColumn Binding="{Binding Scope}" Header="Счёт" Width="50"/>
+                    <DataGridTextColumn Binding="{Binding Time}" Header="Сек." Width="50"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        
+    </Grid>
+</Window>
