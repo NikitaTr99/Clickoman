@@ -14,21 +14,10 @@ namespace Clickoman.windows
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly int col = 12;
-        private static readonly int row = 18;
+        private static readonly int Col = 12;
+        private static readonly int Row = 18;
 
-        private ApplicationContext context;
-
-        private string current_player_name;
-        private Player current_player;
-
-        private RewardManager rewardManager;
-
-        private Button[,] blocks;
-
-        private List<Point> blocks_to_delete;
-
-        private readonly SolidColorBrush[] colors =
+        private readonly SolidColorBrush[] _colors =
         {
             Brushes.Green,
             Brushes.Red,
@@ -36,28 +25,39 @@ namespace Clickoman.windows
             Brushes.Yellow
         };
 
-        private Random random;
+        private Button[,] _blocks;
 
-        private int scope;
-        private int time;
+        private List<Point> _blocksToDelete;
 
-        private DispatcherTimer timer;
-        private DispatcherTimer check_timer;
-        private DispatcherTimer stopwatch;
-        
-        int blocks_with_matches;
+        private int _blocksWithMatches;
+        private DispatcherTimer _checkTimer;
+
+        private ApplicationContext _context;
+        private Player _currentPlayer;
+
+        private readonly string _currentPlayerName;
+
+        private Random _random;
+
+        private RewardManager _rewardManager;
+
+        private int _scope;
+        private DispatcherTimer _stopwatch;
+        private int _time;
+
+        private DispatcherTimer _timer;
 
         public MainWindow()
         {
             InitializeComponent();
-            current_player_name = "Unknown";
+            _currentPlayerName = "Unknown";
             init();
         }
-        
-        public MainWindow(string player_name)
+
+        public MainWindow(string playerName)
         {
             InitializeComponent();
-            current_player_name = player_name;
+            _currentPlayerName = playerName;
             init();
         }
 
@@ -65,27 +65,27 @@ namespace Clickoman.windows
         {
             int x = 0, y = 0;
 
-            scope = 0;
-            time = 0;
-            current_player.clear();
+            _scope = 0;
+            _time = 0;
+            _currentPlayer.clear();
 
             GameField.Children.Clear();
-            
-            ScopeOut.Content = "Счёт: " + scope;
+
+            ScopeOut.Content = "Счёт: " + _scope;
 
             StartButton.Content = "Заново";
 
-            blocks = new Button[col, row];
+            _blocks = new Button[Col, Row];
 
-            for (var i = 0; i < row; i++)
+            for (var i = 0; i < Row; i++)
             {
                 x = 0;
 
-                for (var j = 0; j < col; j++)
+                for (var j = 0; j < Col; j++)
                 {
                     var block = new Button
                     {
-                        Background = colors[random.Next(colors.Length)],
+                        Background = _colors[_random.Next(_colors.Length)],
                         BorderBrush = Brushes.Black,
                         Name = "block_" + j + "_" + i,
                         Height = 25,
@@ -100,7 +100,7 @@ namespace Clickoman.windows
                     Canvas.SetTop(block, y);
 
                     GameField.Children.Add(block);
-                    blocks[j, i] = block;
+                    _blocks[j, i] = block;
 
                     x += 25;
                 }
@@ -108,54 +108,54 @@ namespace Clickoman.windows
                 y += 25;
             }
 
-            timer.Start();
-            check_timer.Start();
-            stopwatch.Start();
+            _timer.Start();
+            _checkTimer.Start();
+            _stopwatch.Start();
         }
 
         private void blockClick(object sender, EventArgs e)
         {
             var block = sender as Button;
-            
+
             if (block.Background == null) return;
 
-            blocks_to_delete.Clear();
+            _blocksToDelete.Clear();
 
-            var coord_names = block.Name.Split('_');
+            var coordNames = block.Name.Split('_');
 
-            var x = int.Parse(coord_names[1]);
-            var y = int.Parse(coord_names[2]);
+            var x = int.Parse(coordNames[1]);
+            var y = int.Parse(coordNames[2]);
 
             var point = new Point(x, y);
 
-            var block_color = block.Background;
+            var blockColor = block.Background;
 
-            findBlocksToDelete(point, block_color);
+            findBlocksToDelete(point, blockColor);
 
-            if (blocks_to_delete.Count >= 2)
+            if (_blocksToDelete.Count >= 2)
             {
-                foreach (var p in blocks_to_delete)
+                foreach (var p in _blocksToDelete)
                 {
-                    var b = blocks[Convert.ToInt32(p.X), Convert.ToInt32(p.Y)];
+                    var b = _blocks[Convert.ToInt32(p.X), Convert.ToInt32(p.Y)];
                     b.Background = null;
                     b.BorderBrush = null;
                 }
 
-                switch (blocks_to_delete.Count)
+                switch (_blocksToDelete.Count)
                 {
                     case 5:
-                        rewardManager.addReward("Уничтожить 5 блоков одновременно");
+                        _rewardManager.addReward("Уничтожить 5 блоков одновременно");
                         break;
                     case 7:
-                        rewardManager.addReward("Уничтожить 7 блоков одновременно");
+                        _rewardManager.addReward("Уничтожить 7 блоков одновременно");
                         break;
                     case 10:
-                        rewardManager.addReward("Уничтожить 10 блоков одновременно (редкий)");
+                        _rewardManager.addReward("Уничтожить 10 блоков одновременно (редкий)");
                         break;
                 }
 
-                scope += blocks_to_delete.Count;
-                ScopeOut.Content = "Счёт: " + scope;
+                _scope += _blocksToDelete.Count;
+                ScopeOut.Content = "Счёт: " + _scope;
             }
         }
 
@@ -166,27 +166,27 @@ namespace Clickoman.windows
             if (p.X - 1 >= 0) buffer.Add(new Point(p.X - 1, p.Y));
 
             //Right
-            if (p.X + 1 < col) buffer.Add(new Point(p.X + 1, p.Y));
+            if (p.X + 1 < Col) buffer.Add(new Point(p.X + 1, p.Y));
 
             //Top
             if (p.Y - 1 >= 0) buffer.Add(new Point(p.X, p.Y - 1));
 
             //Bottom
-            if (p.Y + 1 < row) buffer.Add(new Point(p.X, p.Y + 1));
+            if (p.Y + 1 < Row) buffer.Add(new Point(p.X, p.Y + 1));
 
             return buffer;
         }
 
         private void findBlocksToDelete(Point p, Brush blockColor)
         {
-            if (!blocks_to_delete.Contains(p))
+            if (!_blocksToDelete.Contains(p))
             {
-                var block = blocks[Convert.ToInt32(p.X), Convert.ToInt32(p.Y)];
+                var block = _blocks[Convert.ToInt32(p.X), Convert.ToInt32(p.Y)];
                 if (block.Background == blockColor)
                 {
-                    blocks_to_delete.Add(p);
+                    _blocksToDelete.Add(p);
 
-                    foreach (var point in findBlocksAround(p)) 
+                    foreach (var point in findBlocksAround(p))
                         findBlocksToDelete(point, blockColor);
                 }
             }
@@ -194,38 +194,32 @@ namespace Clickoman.windows
 
         private void moveDown()
         {
-            for (var i = 0; i < row; i++)
-            for (var j = 0; j < col; j++)
-                if (blocks[j, i].Background == null)
+            for (var i = 0; i < Row; i++)
+            for (var j = 0; j < Col; j++)
+                if (_blocks[j, i].Background == null)
                     if (i - 1 >= 0)
                     {
-                        blocks[j, i].Background = blocks[j, i - 1].Background;
-                        blocks[j, i].BorderBrush = blocks[j, i - 1].BorderBrush;
+                        _blocks[j, i].Background = _blocks[j, i - 1].Background;
+                        _blocks[j, i].BorderBrush = _blocks[j, i - 1].BorderBrush;
 
-                        blocks[j, i - 1].Background = null;
-                        blocks[j, i - 1].BorderBrush = null;
+                        _blocks[j, i - 1].Background = null;
+                        _blocks[j, i - 1].BorderBrush = null;
                     }
         }
-        
+
         private void isEndGame()
         {
-            blocks_with_matches = 0;
-            for (var i = 0; i < col; i++)
-            for (var j = 0; j < row; j++)
-                if (blocks[i, j].Background != null)
+            _blocksWithMatches = 0;
+            for (var i = 0; i < Col; i++)
+            for (var j = 0; j < Row; j++)
+                if (_blocks[i, j].Background != null)
                 {
-                    var blocks_around = findBlocksAround(new Point(i, j));
-                    if (blocks_around.Count > 0)
-                    {
-                        foreach (var b in blocks_around)
-                        {
-                            if (blocks[Convert.ToInt32(b.X), Convert.ToInt32(b.Y)].Background ==
-                                blocks[i, j].Background)
-                            {
-                                blocks_with_matches++;
-                            }
-                        }
-                    }
+                    var blocksAround = findBlocksAround(new Point(i, j));
+                    if (blocksAround.Count > 0)
+                        foreach (var b in blocksAround)
+                            if (_blocks[Convert.ToInt32(b.X), Convert.ToInt32(b.Y)].Background ==
+                                _blocks[i, j].Background)
+                                _blocksWithMatches++;
                 }
         }
 
@@ -233,44 +227,35 @@ namespace Clickoman.windows
         {
             createField();
         }
-        
+
         private void RewardButton_Click(object sender, RoutedEventArgs e)
         {
-            RewardWindow rewardWindow = new RewardWindow(context, current_player.Id);
+            var rewardWindow = new RewardWindow(_context, _currentPlayer.Id);
             rewardWindow.ShowDialog();
         }
 
         private void stopGame()
         {
-            check_timer.Stop();
-            stopwatch.Stop();
+            _checkTimer.Stop();
+            _stopwatch.Stop();
 
-            current_player.Scope = scope;
-            current_player.Time = time;
+            _currentPlayer.Scope = _scope;
+            _currentPlayer.Time = _time;
 
-            if (time <= 20)
-            {
-                rewardManager.addReward("Закончить игру менее чем за 20 сек. (редкий)");
-            }
-             else if (time <= 25)
-            {
-                rewardManager.addReward("Закончить игру менее чем за 25 сек.");
-            }
-            else if (time <= 30)
-            {
-                rewardManager.addReward("Закончить игру менее чем за 30 сек.");
-            }
+            if (_time <= 20) _rewardManager.addReward("Закончить игру менее чем за 20 сек. (редкий)");
+            else if (_time <= 25) _rewardManager.addReward("Закончить игру менее чем за 25 сек.");
+            else if (_time <= 30) _rewardManager.addReward("Закончить игру менее чем за 30 сек.");
 
-            var player = context.Players.FirstOrDefault(p => p.Name == current_player.Name);
-            
+            var player = _context.Players.FirstOrDefault(p => p.Name == _currentPlayer.Name);
+
             if (player != null)
             {
-                player.Scope = scope;
-                player.Time = time;
+                player.Scope = _scope;
+                player.Time = _time;
 
-                context.Entry(player).State = EntityState.Modified;
-                
-                rewardManager.pushRewards(player.Id);
+                _context.Entry(player).State = EntityState.Modified;
+
+                _rewardManager.pushRewards(player.Id);
 
             }
             else
@@ -278,85 +263,79 @@ namespace Clickoman.windows
                 throw new NullReferenceException("Player not found");
             }
 
-            context.Players.Load();
+            _context.Players.Load();
 
-            RatingTable.ItemsSource = context.Players.Local.ToBindingList();
-            
+            RatingTable.ItemsSource = _context.Players.Local.ToBindingList();
+
             RatingTable.Items.Refresh();
-            
-            context.SaveChanges();
-            
-            MessageBox.Show("Конец игры. Счёт: " + scope);
+
+            _context.SaveChanges();
+
+            MessageBox.Show("Конец игры. Счёт: " + _scope);
         }
 
         private void updateTimerTick(object sender, EventArgs e)
         {
             moveDown();
         }
-        
+
         private void checkTimerTick(object sender, EventArgs e)
         {
             isEndGame();
-            if (blocks_with_matches <= 0)
-            {
-                stopGame();
-            }
+            if (_blocksWithMatches <= 0) stopGame();
         }
 
         private void stopwatchTimerTick(object sender, EventArgs e)
         {
-            time++;
+            _time++;
         }
 
         private void init()
         {
-            context = new ApplicationContext();
-            rewardManager = new RewardManager(context);
-            random = new Random();
-            blocks_to_delete = new List<Point>();
-            
-            context.Players.Load();
-            
-            var player = context.Players.FirstOrDefault(p => p.Name == current_player_name);
+            _context = new ApplicationContext();
+            _random = new Random();
+            _rewardManager = new RewardManager(_context);
+            _blocksToDelete = new List<Point>();
+
+            _context.Players.Load();
+
+            var player = _context.Players.FirstOrDefault(p => p.Name == _currentPlayerName);
 
             if (player != null)
             {
-                current_player = player;
+                _currentPlayer = player;
             }
             else
             {
-                context.Players.Add(new Player(current_player_name, 0, 0));
-                context.SaveChanges();
-                
-                player = context.Players.FirstOrDefault(p => p.Name == current_player_name);
-                if (player != null)
-                {
-                    current_player = player;
-                }
+                _context.Players.Add(new Player(_currentPlayerName, 0, 0));
+                _context.SaveChanges();
+
+                player = _context.Players.FirstOrDefault(p => p.Name == _currentPlayerName);
+                if (player != null) _currentPlayer = player;
             }
 
-            timer = new DispatcherTimer
+            _timer = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 0, 0, 100)
             };
 
-            stopwatch = new DispatcherTimer()
+            _stopwatch = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 0, 1, 0)
             };
 
-            check_timer = new DispatcherTimer()
+            _checkTimer = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 0, 0, 300)
             };
 
-            timer.Tick += updateTimerTick;
-            check_timer.Tick += checkTimerTick;
-            stopwatch.Tick += stopwatchTimerTick;
+            _timer.Tick += updateTimerTick;
+            _checkTimer.Tick += checkTimerTick;
+            _stopwatch.Tick += stopwatchTimerTick;
 
-            RatingTable.ItemsSource = context.Players.Local.ToBindingList();
+            RatingTable.ItemsSource = _context.Players.Local.ToBindingList();
 
-            PlayerNameOut.Content = current_player.Name;
+            PlayerNameOut.Content = _currentPlayer.Name;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Clickoman.windows
 {
@@ -14,20 +13,14 @@ namespace Clickoman.windows
         {
 
             MainWindow mainWindow;
-            
+
             var name = PlayerNameInput.Text;
 
-            if (name != String.Empty)
-            {
-                mainWindow = new MainWindow(name);
-            }
-            else
-            {
-                mainWindow = new MainWindow("Unknown player");
-            }
-            
+            if (name != string.Empty) mainWindow = new MainWindow(name);
+            else mainWindow = new MainWindow("Unknown player");
+
             mainWindow.Show();
-            this.Close();
+            Close();
         }
     }
 }

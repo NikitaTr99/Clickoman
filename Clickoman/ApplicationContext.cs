@@ -1,29 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Data.SQLite;
-using System.Data.SQLite.EF6;
-using System.IO;
 
 namespace Clickoman
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<Player> Players { get; set; }
-        
-        public DbSet<Reward> Rewards { get; set; }
-        public ApplicationContext():base("DefaultConnection")
+        public ApplicationContext() : base("DefaultConnection")
         {
-            
+
         }
+        public DbSet<Player> Players { get; set; }
+
+        public DbSet<Reward> Rewards { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Player>().Property(Player => Player.Id)
+            modelBuilder.Entity<Player>().Property(player => player.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            
-            modelBuilder.Entity<Reward>().Property(Reward => Reward.Id)
+
+            modelBuilder.Entity<Reward>().Property(reward => reward.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            
+
             base.OnModelCreating(modelBuilder);
         }
     }

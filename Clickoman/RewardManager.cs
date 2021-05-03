@@ -6,34 +6,31 @@ namespace Clickoman
 {
     public class RewardManager
     {
-        private ApplicationContext context;
+        private readonly ApplicationContext _context;
 
-        private Stack<string> rewards;
-        private Stack<Reward> rewards2;
+        private readonly Stack<string> _rewards;
 
         public RewardManager(ApplicationContext context)
         {
-            this.context = context;
-            rewards = new Stack<string>();
+            _context = context;
+            _rewards = new Stack<string>();
         }
 
         public void addReward(string name)
         {
-            if (!rewards.Contains(name)) rewards.Push(name);
+            if (!_rewards.Contains(name)) _rewards.Push(name);
         }
 
         public void pushRewards(int player)
         {
-            foreach (var s in rewards)
-            {
-                if (!context.Rewards.Where(rp => rp.Player == player).Select(r => r.Name == s).Contains(true))
+            foreach (var s in _rewards)
+                if (!_context.Rewards.Where(rp => rp.Player == player).Select(r => r.Name == s).Contains(true))
                 {
                     var reward = new Reward(s, player);
-                    context.Rewards.AddOrUpdate(reward);
+                    _context.Rewards.AddOrUpdate(reward);
                 }
-            }
-            context.SaveChanges();
-            rewards.Clear();
+            _context.SaveChanges();
+            _rewards.Clear();
         }
     }
 }

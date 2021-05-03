@@ -1,16 +1,10 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.CompilerServices;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Clickoman
 {
     [Table("Player")]
     public class Player
     {
-        private int id;
-        private string name;
-        private int scope;
-        private int time;
 
         public Player()
         {
@@ -18,47 +12,31 @@ namespace Clickoman
 
         public Player(string name, int scope, int time)
         {
-            this.name = name;
-            this.scope = scope;
-            this.time = time;
-        }
-
-        public void clear()
-        {
-            this.scope = 0;
-            this.time = 0;
+            Name = name;
+            Scope = scope;
+            Time = time;
         }
 
         public Player(int id, string name, int scope, int time)
         {
-            this.id = id;
-            this.name = name;
-            this.scope = scope;
-            this.time = time;
+            Id = id;
+            Name = name;
+            Scope = scope;
+            Time = time;
         }
 
-        public int Id
-        {
-            get => id;
-            set => id = value;
-        }
+        public int Id { get; set; }
 
-        public string Name
-        {
-            get => name;
-            set => name = value;
-        }
+        public string Name { get; set; }
 
-        public int Scope
-        {
-            get => scope;
-            set => scope = value;
-        }
+        public int Scope { get; set; }
 
-        public int Time
+        public int Time { get; set; }
+
+        public void clear()
         {
-            get => time;
-            set => time = value;
+            Scope = 0;
+            Time = 0;
         }
     }
 }

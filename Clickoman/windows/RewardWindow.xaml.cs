@@ -7,16 +7,16 @@ namespace Clickoman.windows
     public partial class RewardWindow : Window
     {
 
-        private ApplicationContext context;
-        
+        private readonly ApplicationContext _context;
+
         public RewardWindow(ApplicationContext ac, int player)
         {
             InitializeComponent();
-            context = ac;
-            
-            context.Rewards.Load();
-            
-            var rewards = context.Rewards.Where(r => r.Player == player).ToList();
+            _context = ac;
+
+            _context.Rewards.Load();
+
+            var rewards = _context.Rewards.Where(r => r.Player == player).ToList();
 
             RewardTable.ItemsSource = rewards;
         }

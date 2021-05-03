@@ -3,13 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:Clickoman"
         mc:Ignorable="d"
         Title="Clickoman - Достижения" ResizeMode="NoResize" Height="487.5" Width="515">
     <Grid>
         <DataGrid x:Name="RewardTable" IsReadOnly="True" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" Header="Открытые достижения игрока" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Name}" Header="Открытые достижения игрока" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

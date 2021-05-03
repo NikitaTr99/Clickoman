@@ -5,9 +5,6 @@ namespace Clickoman
     [Table("Reward")]
     public class Reward
     {
-        private int id;
-        private string name;
-        private int player;
 
         public Reward()
         {
@@ -15,38 +12,26 @@ namespace Clickoman
 
         public Reward(string name)
         {
-            this.name = name;
+            Name = name;
         }
 
         public Reward(string name, int player)
         {
-            this.name = name;
-            this.player = player;
+            Name = name;
+            Player = player;
         }
 
         public Reward(int id, string name, int player)
         {
-            this.id = id;
-            this.name = name;
-            this.player = player;
+            Id = id;
+            Name = name;
+            Player = player;
         }
 
-        public int Id
-        {
-            get => id;
-            set => id = value;
-        }
+        public int Id { get; set; }
 
-        public string Name
-        {
-            get => name;
-            set => name = value;
-        }
+        public string Name { get; set; }
 
-        public int Player
-        {
-            get => player;
-            set => player = value;
-        }
+        public int Player { get; set; }
     }
 }

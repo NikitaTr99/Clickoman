@@ -3,12 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:Clickoman"
         mc:Ignorable="d"
         Title="Clickoman - Выбор имени" ResizeMode="CanMinimize" Height="150" Width="300">
     <StackPanel Orientation="Vertical">
-        <Label Content="Имя игрока: " Margin="8,0"/>
-        <TextBox x:Name="PlayerNameInput" Margin="8,0"/>
-        <Button x:Name="NextButton" Click="NextButton_OnClick" Content="Запуск" Margin="16,16"/>
+        <Label Content="Имя игрока: " Margin="8,0" />
+        <TextBox x:Name="PlayerNameInput" Margin="8,0" />
+        <Button x:Name="NextButton" Click="NextButton_OnClick" Content="Запуск" Margin="16,16" />
     </StackPanel>
 </Window>
